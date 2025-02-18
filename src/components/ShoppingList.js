@@ -1,20 +1,37 @@
-import React from "react";
-import Item from "./Item";
+import { useState } from "react";
 
 function ShoppingList({ items }) {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  // Ensure all items show when initially rendered (selectedCategory === "All")
+  const filteredItems = items.filter((item) =>
+    selectedCategory === "All" ? true : item.category === selectedCategory
+  );
+
   return (
-    <div className="ShoppingList">
-      <div className="Filter">
-        <select name="filter">
-          <option value="All">Filter by category</option>
-          <option value="Produce">Produce</option>
-          <option value="Dairy">Dairy</option>
-          <option value="Dessert">Dessert</option>
-        </select>
-      </div>
+    <div>
+      <h2>Shopping List</h2>
+
+      {/* Dropdown for selecting category */}
+      <select value={selectedCategory} onChange={handleCategoryChange}>
+        <option value="All">All</option>
+        <option value="Produce">Produce</option>
+        <option value="Dairy">Dairy</option>
+        <option value="Dessert">Dessert</option>
+      </select>
+
+      {/* ✅ Ensure this <ul> has className="Items" to match the test */}
       <ul className="Items">
-        {items.map((item) => (
-          <Item key={item.id} name={item.name} category={item.category} />
+        {filteredItems.map((item) => (
+          <li key={item.id} className="">
+            <span>{item.name}</span>
+            <span className="category">{item.category}</span>
+            <button>Add to Cart</button>
+          </li>
         ))}
       </ul>
     </div>
